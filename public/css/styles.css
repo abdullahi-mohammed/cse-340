@@ -57,10 +57,16 @@ a:hover {
 }
 
 .hero {
-  background-color: #e0e0e0;
   padding: 20px;
   border-radius: 8px;
+  position: relative;
 }
+
+.hero > div {
+  position: absolute;
+  background: rgba(170, 112, 70, 0.534);
+}
+
 .hero h1 {
   margin-bottom: 10px;
 }
@@ -68,6 +74,14 @@ a:hover {
 .hero h2 {
   margin-bottom: 5px;
   font-weight: normal;
+}
+
+.hero img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 15px;
+  margin-left: 200px;
 }
 
 .hero p {
