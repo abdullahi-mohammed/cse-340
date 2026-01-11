@@ -91,6 +91,7 @@ main section:last-child {
   display: flex;
   gap: 20px;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .upgrades > ul {
@@ -99,6 +100,6 @@ main section:last-child {
   margin: 0;
   padding: 0;
   gap: 10px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
