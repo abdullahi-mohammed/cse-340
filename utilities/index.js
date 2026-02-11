@@ -15,6 +15,31 @@ Util.getNav = async function (req, res, next) {
     return list
 }
 
+
+/* **************************************
+ * Build the select list of classification items
+ * ************************************ */
+Util.buildClassificationList = async function (classification_id = null) {
+    let data = await invModel.getClassifications();
+    let classificationList = `<select name="classification_id" `;
+    classificationList += `id="classificationList" `;
+    classificationList += `required>`;
+    classificationList += `<option value=''>Choose a Classification</option>`;
+    data.rows.forEach((row) => {
+        classificationList += `<option value="${row.classification_id}"`;
+        if (
+            classification_id != null &&
+            row.classification_id == classification_id
+        ) {
+            classificationList += ` selected `;
+        }
+        classificationList += `>${row.classification_name}</option>`;
+    });
+    classificationList += `</select>`;
+    return classificationList;
+};
+
+
 /* Build the classification view HTML */
 Util.buildClassificationGrid = async function (data) {
     let grid
@@ -39,6 +64,69 @@ Util.buildClassificationGrid = async function (data) {
     return grid
 }
 
+
+
+/* **************************************
+* Build the inventory view HTML
+* ************************************ */
+Util.buildSingleVehicleDisplay = async function (data) {
+    let grid = '<section id="vehicle-display">'
+    grid += `<div>`
+    grid += '<section class="imagePrice">'
+    grid += `<img src="${data.inv_image}" alt="Image of ${data.inv_make} ${data.inv_model}">`
+    grid += '</section>'
+    grid += '<section class="vehicleDetail">'
+    grid += "<h3> " + data.inv_make + " " + data.inv_model + " Details</h3>"
+    grid += '<ul id="vehicle-details">'
+    grid +=
+        "<li><h4>Price: $" +
+        new Intl.NumberFormat("en-US").format(data.inv_price) +
+        "</h4></li>"
+    grid += "<li><h4>Description:</h4> " + data.inv_description + "</li>"
+    grid += "<li><h4>Color:</h4> " + data.inv_color + "</li>"
+    grid +=
+        "<li><h4>Miles:</h4> " +
+        new Intl.NumberFormat("en-US").format(data.inv_miles) +
+        "</li>"
+    grid += "</ul>"
+    grid += "</section>"
+    grid += `</div>`
+    return grid
+}
+
+Util.buildErrorMessage = async function (error) {
+    let message;
+    message = `<div id="error-page">`;
+    message += `<h2 id = "error-heading">${error.message}</h2>`;
+    message += `<div id="error-container">`;
+    message += `<img src="images/site/error.jpg" width="600" height="400" loading="lazy" alt="Cartoon Image of car crash" id="error-img">`;
+    message += `</div>`;
+    message += `</div>`;
+    message += `<div id="error-overlay">`;
+    message += `</div>`;
+    return message;
+};
+
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+
+
+/*  Check if Employee or Admin level authorization
+ * ************************************ */
+Util.checkAuthorized = (req, res, next) => {
+    Util.checkLogin(req, res, () => {
+        if (
+            res.locals.accountData.account_type == "Employee" ||
+            res.locals.accountData.account_type == "Admin"
+        ) {
+            next();
+        } else {
+            req.flash(
+                "notice",
+                "Unauthorized. You do not have permission to access the page."
+            );
+            return res.redirect("/account/login");
+        }
+    });
+};
 
 module.exports = Util
