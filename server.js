@@ -12,6 +12,35 @@ const app = express()
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const utilites = require("./utilities")
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session")
+const flash = require("connect-flash")
+
+/* ***********************
+ * Middleware
+ *************************/
+// app.use(express.json()) // for parsing application/json
+// app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(cookieParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// Session middleware (required by connect-flash)
+app.use(session({
+  secret: process.env.SESSION_SECRET || "super-secret-key",
+  resave: false,
+  saveUninitialized: true,
+}))
+
+// Flash messages
+app.use(flash())
+
+// Make flash messages available to all views via express-messages
+app.use((req, res, next) => {
+  res.locals.messages = require("express-messages")(req, res)
+  next()
+})
 
 /* ***********************
  * Routes
@@ -24,6 +53,7 @@ app.set("layout", "./layouts/layout") // not at views root
 app.get("/", utilites.handleErrors(baseController.buildHome))
 //Inventory Routes
 app.use("/inv", require("./routes/inventoryRoute"))
+app.use("/account", require("./routes/accountRoute"))
 
 app.use(async (req, res, next) => {
   next({ status: 404, message: `Sorry, we appear to have lost that page.` })

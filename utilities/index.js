@@ -15,10 +15,7 @@ Util.getNav = async function (req, res, next) {
     return list
 }
 
-
-/* **************************************
- * Build the select list of classification items
- * ************************************ */
+//  Build the select list of classification items
 Util.buildClassificationList = async function (classification_id = null) {
     let data = await invModel.getClassifications();
     let classificationList = `<select name="classification_id" `;
@@ -64,11 +61,7 @@ Util.buildClassificationGrid = async function (data) {
     return grid
 }
 
-
-
-/* **************************************
-* Build the inventory view HTML
-* ************************************ */
+//  Build the inventory view HTML
 Util.buildSingleVehicleDisplay = async function (data) {
     let grid = '<section id="vehicle-display">'
     grid += `<div>`
@@ -110,8 +103,7 @@ Util.buildErrorMessage = async function (error) {
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
 
-/*  Check if Employee or Admin level authorization
- * ************************************ */
+//   Check if Employee or Admin level authorization
 Util.checkAuthorized = (req, res, next) => {
     Util.checkLogin(req, res, () => {
         if (
@@ -128,5 +120,21 @@ Util.checkAuthorized = (req, res, next) => {
         }
     });
 };
+
+/* ****************************************
+ * Assignment 5 task2
+ **************************************** */
+Util.checkAccountType = (req, res, next) => {
+    if (!res.locals.accountData) {
+        return res.redirect("/account/login")
+    }
+    if (res.locals.accountData.account_type == "Employee" ||
+        res.locals.accountData.account_type == "Admin") {
+        next()
+    }
+    else {
+        return res.redirect("/account/login")
+    }
+}
 
 module.exports = Util

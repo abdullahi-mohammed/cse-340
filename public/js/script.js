@@ -30,7 +30,7 @@ function buildInventoryList(data) {
     //  set up the table labels
     let dataTable = "<thead>"
     // set up the table body 
-    dataTable += "<body>"
+    dataTable += "<tbody>"
     // Iterate over all vehicles in the array and put each in a row
     data.forEach(function (element) {
         console.log(element.inv_id + ", " + element.inv_model)
@@ -38,7 +38,7 @@ function buildInventoryList(data) {
         dataTable += `<td><a href='/inv/edit/${element.inv_id}' title='Click to update'>Modify</a></td>`
         dataTable += `<td><a href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`
     })
-    dataTable = + "</tbody>"
+    dataTable += "</tbody>"
     // Display the contents in the Inventory Management view
     inventoryDisplay.innerHTML = dataTable
 }

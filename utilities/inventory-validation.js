@@ -1,123 +1,182 @@
-const utilities = require(".");
-const invModel = require("../models/inventory-model");
-const { body, validationResult } = require("express-validator");
-const validate = {};
+/* ***********************************
+ * Created in Unit 4
+ * Modified in Unit 5
+ *********************************** */
+const utilities = require(".")
+const { body, validationResult } = require("express-validator")
+const validate = {}
 
-/* **********************************
- *  New Classification Data Validation Rules
+/*  **********************************
+ *  Classification Data Validation Rule
+ *  Assignment 4, Task 2
  * ********************************* */
-
-validate.classificationRules = () => {
+validate.classificationRule = () => {
   return [
+    // name is required and must be string
     body("classification_name")
       .trim()
-      .escape()
-      .notEmpty()
-      .withMessage("A valid name is required.")
-      .isWhitelisted("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-      .withMessage(
-        "Classification must contain alphabetic characters only (A-Z, a-z), with no spaces."
-      ),
-  ];
-};
+      .isLength({ min: 1 })
+      .isAlpha()
+      .withMessage("Provide a correct classification name."),
+  ]
+}
 
-/* **********************************
- *  New Inventory Data Validation Rules
+/* ******************************
+ * Check and return error or continue to insert classification
+ *  Assignment 4, Task 2
+ * ***************************** */
+validate.checkClassificationData = async (req, res, next) => {
+  const { classification_name } = req.body
+  let errors = []
+  errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("inventory/add-classification", {
+      errors,
+      title: "Add Classification",
+      nav,
+      classification_name,
+    })
+    return
+  }
+  next()
+}
+
+/*  **********************************
+ *  New Vehicle Data Validation Rules
+ *  Assignment 4, Task 3
  * ********************************* */
-
-validate.inventoryRules = () => {
+validate.newInventoryRules = () => {
   return [
     body("classification_id")
       .trim()
-      .notEmpty()
-      .withMessage("Classification is required.")
-      .bail(),
+      .isInt({
+        no_symbols: true,
+      })
+      .withMessage("The vehicle's classification is required."),
 
     body("inv_make")
       .trim()
-      .notEmpty()
-      .withMessage("Vehicle Make required.")
-      .bail()
-      .isLength({ min: 3, max: 50 })
-      .withMessage("Vehicle Make must be at least 3 characters (max 50)"),
+      .escape()
+      .isAlpha()
+      .isLength({
+        min: 3,
+      })
+      .withMessage("A vehicle make is required."),
 
     body("inv_model")
       .trim()
-      .notEmpty()
-      .withMessage("Vehicle Model required.")
-      .bail()
-      .isLength({ min: 3, max: 50 })
-      .withMessage("Vehicle Model must be at least 3 characters (max 50)"),
+      .escape()
+      .isAlpha()
+      .isLength({
+        min: 3,
+      })
+      .withMessage("A vehicle model is required."),
 
     body("inv_description")
       .trim()
-      .notEmpty()
-      .withMessage("Description required."),
+      .escape()
+      .isLength({
+        min: 3,
+      })
+      .withMessage("A vehicle description is required."),
 
-    body("inv_image").trim().notEmpty().withMessage("Image Path required."),
+    body("inv_image")
+      .trim()
+      .isLength({
+        min: 6,
+      })
+      .matches(/\.(jpg|jpeg|png|webp)$/)
+      .withMessage("A vehicle image path is required and must be an image."),
 
     body("inv_thumbnail")
       .trim()
-      .notEmpty()
-      .withMessage("Thumbnail Path required."),
+      .isLength({
+        min: 6,
+      })
+      .matches(/\.(jpg|jpeg|png|webp)$/)
+      .withMessage("A vehicle thumbnail path is required and must be an image."),
 
     body("inv_price")
       .trim()
-      .notEmpty()
-      .withMessage("Price is required.")
-      .bail()
-      .isNumeric()
-      .withMessage("Price must be a valid number.")
-      .bail()
-      .isInt({ gt: 0 })
-      .withMessage("Price must be positive whole number. (digits only)")
-      .isLength({ max: 9 })
-      .withMessage("Price cannot exceed 9 digits. (digits only)"),
+      .isDecimal()
+      .withMessage("A vehicle price is required."),
 
     body("inv_year")
       .trim()
-      .notEmpty()
-      .withMessage("Year is required.")
-      .bail()
-      .isNumeric()
-      .withMessage("Year must be a valid number.")
-      .bail()
-      .isLength({ min: 4, max: 4 })
-      .withMessage("Year must be a 4-digit number."),
+      .isInt({
+        min: 1900,
+        max: 2099,
+      })
+      .withMessage("A vehicle year is required."),
 
     body("inv_miles")
       .trim()
-      .notEmpty()
-      .withMessage("Miles are required.")
-      .bail()
-      .isInt({ gt: 0 })
-      .withMessage("Miles must be positive integer. (digits only)"),
+      .isInt({
+        no_symbols: true,
+      })
+      .withMessage("The vehicle's miles is required."),
 
-    body("inv_color").trim().notEmpty().withMessage("Color is required."),
-  ];
-};
+    body("inv_color")
+      .trim()
+      .escape()
+      .isLength({
+        min: 3,
+      })
+      .withMessage("The vehicle's color is required."),
+  ]
+}
 
-validate.checkClassificationData = async (req, res, next) => {
-  const { classification_name } = req.body;
-  let errors = [];
-  errors = validationResult(req);
+/* ******************************
+ *  Check data and return errors or continue to new vehicle
+ *  Assignment 4, Task 3
+ * ***************************** */
+validate.checkInventoryData = async (req, res, next) => {
+  const {
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+  let errors = []
+  errors = validationResult(req)
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav();
-    res.render("./inventory/add-classification", {
+    let nav = await utilities.getNav()
+    const classificationSelect = await utilities.buildClassificationList(
+      classification_id
+    )
+    res.render("inventory/add-inventory", {
       errors,
-      title: "Add New Classification",
+      title: "Add Vehicle",
       nav,
-      classification_name,
-    });
-    return;
+      classificationSelect,
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+    })
+    return
   }
-  next();
-};
+  next()
+}
 
-// Validate the New Inventory Data meets criteria
-validate.checkNewInventoryData = async (req, res, next) => {
+/* ******************************
+ *  Check update data and return errors or continue to edit view
+ *  Unit 5, Update Step 2 activity
+ * ***************************** */
+validate.checkUpdateData = async (req, res, next) => {
   const {
-    classification_id,
     inv_make,
     inv_model,
     inv_description,
@@ -127,90 +186,35 @@ validate.checkNewInventoryData = async (req, res, next) => {
     inv_year,
     inv_miles,
     inv_color,
-  } = req.body;
-
-  let errors = [];
-  errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    try {
-      let nav = await utilities.getNav();
-      const classList = await utilities.buildClassificationList(
-        classification_id
-      );
-      res.render("./inventory/add-inventory", {
-        errors,
-        title: "Add New Inventory",
-        nav,
-        classList,
-        classification_id,
-        inv_make,
-        inv_model,
-        inv_description,
-        inv_image,
-        inv_thumbnail,
-        inv_price,
-        inv_year,
-        inv_miles,
-        inv_color,
-      });
-      return;
-    } catch (err) {
-      console.error("Error rendering page:", err);
-      res.status(500).send("Server error while rendering the page.");
-    }
-  }
-  next();
-};
-
-// Validate the Edit Inventory Data meets criteria
-validate.checkEditInventoryData = async (req, res, next) => {
-  const {
+    classification_id,
     inv_id,
-    classification_id,
-    inv_make,
-    inv_model,
-    inv_description,
-    inv_image,
-    inv_thumbnail,
-    inv_price,
-    inv_year,
-    inv_miles,
-    inv_color,
-  } = req.body;
-
-  let errors = [];
-  errors = validationResult(req);
+  } = req.body
+  let errors = []
+  errors = validationResult(req)
   if (!errors.isEmpty()) {
-    try {
-      let nav = await utilities.getNav();
-      const classList = await utilities.buildClassificationList(
-        classification_id
-      );
-      const invName = `Edit: ${inv_make} ${inv_model}`;
-      res.render("./inventory/edit-inventory", {
-        errors,
-        title: invName,
-        nav,
-        classList,
-        classification_id,
-        inv_id,
-        inv_make,
-        inv_model,
-        inv_description,
-        inv_image,
-        inv_thumbnail,
-        inv_price,
-        inv_year,
-        inv_miles,
-        inv_color,
-      });
-      return;
-    } catch (err) {
-      console.error("Error rendering page:", err);
-      res.status(500).send("Server error while rendering the page.");
-    }
+    let nav = await utilities.getNav()
+    const classificationSelect = await utilities.buildClassificationList(
+      classification_id
+    )
+    res.render("inventory/edit-inventory", {
+      errors,
+      title: `Edit ${inv_make} ${inv_model}`,
+      nav,
+      classificationSelect,
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+      inv_id,
+    })
+    return
   }
-  next();
-};
+  next()
+}
 
-module.exports = validate;
+module.exports = validate

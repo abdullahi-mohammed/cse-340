@@ -1,0 +1,44 @@
+<%# Unit 5, Delete Inv Item activity %>
+<% if (title) {%>
+  <h1>
+    <%= title %>
+  </h1>
+  <%} else {res.redirect('/')} %>
+
+
+    <%- messages() %>
+
+  <% if (errors) { %>
+  <ul class="message warning">
+    <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+    <%  }) %>
+  </ul>
+  <% } %>
+
+  <div id="registerContainer">
+    <p>Confirm Deletion - The deletion is permanent.</p>
+    <form action="/inv/delete" method="post">
+      <fieldset>
+        <label for="invMake">Make</label>
+        <input type="text" readonly <% if(locals.inv_make) { %> value="<%= locals.inv_make %>"<% } %>>
+  
+        <label for="invModel">Model</label>
+        <input type="text" readonly <% if(locals.inv_model) { %> value="<%= locals.inv_model %>" <% } %>>
+  
+        <label for="invPrice">Price</label>
+        <input type="text" readonly <% if(locals.inv_price) { %>
+          value="<%= locals.inv_price %>"
+          <% } %>> 
+  
+        <label for="invYear">Year</label>
+        <input type="text" readonly <% if(locals.inv_year) { %> value="<%= locals.inv_year %>"
+        <% } %>>
+  
+        <input type="hidden" name="inv_id" 
+  <% if(locals.inv_id) { %> value="<%= locals.inv_id %>" <% } %>>
+  
+        <button type="submit">Delete Item</button>
+      </fieldset>
+    </form>
+  </div>
