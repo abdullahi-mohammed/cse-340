@@ -117,6 +117,78 @@ a:hover {
   flex-direction: column;
 }
 
+/* Inventory - Add Inventory page */
+#registerContainer {
+  max-width: 720px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+#registerContainer p {
+  margin: 0 0 16px;
+  color: #444;
+}
+
+#registerContainer form {
+  display: block;
+}
+
+#registerContainer fieldset {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+#registerContainer label {
+  font-weight: 600;
+}
+
+#registerContainer input,
+#registerContainer textarea,
+#registerContainer select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  font: inherit;
+  background-color: #fff;
+}
+
+#registerContainer textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+#registerContainer button {
+  margin-top: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#registerContainer button:hover {
+  background-color: #222;
+}
+
+.message.warning {
+  max-width: 720px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  border: 1px solid #e0b4b4;
+  background-color: #fff2f2;
+  color: #8a1f1f;
+  border-radius: 8px;
+}
+
 #vehicle-display img {
   max-width: 100%;
 }

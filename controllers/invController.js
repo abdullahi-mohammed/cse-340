@@ -79,7 +79,7 @@ invCont.addClassification = async function (req, res, next) {
     let nav = await utilities.getNav()
     const { classification_name } = req.body
     const insertResult = await invModel.addClassification(classification_name)
-
+    const classificationSelect = await utilities.buildClassificationList()
     if (insertResult) {
         nav = await utilities.getNav()
         req.flash("message success", `The ${insertResult.classification_name} classification was successfully added.`)
@@ -87,12 +87,14 @@ invCont.addClassification = async function (req, res, next) {
             title: "Vehicle Management",
             nav,
             errors: null,
+            classificationSelect,
         })
     } else {
         req.flash("message warning", "Sorry, the insert failed.")
         res.status(501).render("inventory/add-classification", {
             title: "Add New Classification",
             nav,
+            classificationSelect,
             errors: null,
         })
     }
