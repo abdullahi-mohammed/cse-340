@@ -15,9 +15,11 @@ validate.classificationRule = () => {
     // name is required and must be string
     body("classification_name")
       .trim()
-      .isLength({ min: 1 })
-      .isAlpha()
-      .withMessage("Provide a correct classification name."),
+      .isLength({ min: 2 })
+      .matches(/^[A-Z][a-zA-Z]+$/)
+      .withMessage(
+        "Classification name must be at least 2 letters and start with a capital letter."
+      ),
   ]
 }
 

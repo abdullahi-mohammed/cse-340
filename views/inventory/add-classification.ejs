@@ -23,8 +23,8 @@
                 <fieldset>
                   <label for="carClassification">Classification Name</label>
                   <p>Name must be alphabetic characters only.</p>
-                  <input type="text" name="classification_name" id="carClassification" required pattern="[a-zA-Z]*"
-                    value="<%= locals.classification_name %>">
+                  <input type="text" name="classification_name" id="carClassification" required
+                    pattern="^[A-Z][a-zA-Z]+$" value="<%= locals.classification_name %>">
                   <button type="submit">Add Classification</button>
                 </fieldset>
               </form>
