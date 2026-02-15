@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const invModel = require("../models/inventory-model")
 const Util = {}
 
@@ -42,7 +43,7 @@ Util.buildClassificationGrid = async function (data) {
     let grid
 
     if (data.length > 0) {
-        grid = '<ul id="inv-display"'
+        grid = '<ul id="inv-display">'
         data.forEach(vehicle => {
             grid += '<li>'
             grid += `<a href="/inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">`
@@ -103,6 +104,46 @@ Util.buildErrorMessage = async function (error) {
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
 
+
+/* ****************************************
+ * Middleware to check token validity
+ **************************************** */
+Util.checkJWTToken = (req, res, next) => {
+    if (req.cookies.jwt) {
+        jwt.verify(
+            req.cookies.jwt,
+            process.env.ACCESS_TOKEN_SECRET ||
+            "b53faaaf114c87cc0fdb8660cef6d5133cf5069cdf7566f75e8d002550c760119db0d1edfaed6475f89016829ccdac57855f40afc7f0d7f0cc1be301f785bc47",
+            function (err, accountData) {
+                if (err) {
+                    req.flash("message warning", "Please log in.");
+                    res.clearCookie("jwt");
+                    console.error(err);
+
+                    return res.redirect("/account/login");
+                }
+                res.locals.accountData = accountData;
+                res.locals.loggedin = 1;
+                next();
+            }
+        );
+    } else {
+        next();
+    }
+};
+
+/* ****************************************
+ * Check if user is logged in
+ **************************************** */
+Util.checkLogin = (req, res, next) => {
+    if (res.locals.loggedin) {
+        return next();
+    }
+    req.flash("message warning", "Please log in to continue.");
+    return res.redirect("/account/login");
+};
+
+
 //   Check if Employee or Admin level authorization
 Util.checkAuthorized = (req, res, next) => {
     Util.checkLogin(req, res, () => {
@@ -126,6 +167,10 @@ Util.checkAuthorized = (req, res, next) => {
  **************************************** */
 Util.checkAccountType = (req, res, next) => {
     if (!res.locals.accountData) {
+        req.flash(
+            "message warning",
+            "Please log in with an Employee or Admin account to continue."
+        );
         return res.redirect("/account/login")
     }
     if (res.locals.accountData.account_type == "Employee" ||
@@ -133,6 +178,10 @@ Util.checkAccountType = (req, res, next) => {
         next()
     }
     else {
+        req.flash(
+            "message warning",
+            "Unauthorized. Employee or Admin access is required."
+        );
         return res.redirect("/account/login")
     }
 }

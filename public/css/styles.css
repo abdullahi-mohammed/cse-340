@@ -109,6 +109,58 @@ a:hover {
   color: #2b2a2a;
 }
 
+/* Home - Index page */
+.hero + section {
+  display: grid;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.upgrades,
+.reviews {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.upgrades h3,
+.reviews h3 {
+  margin-top: 0;
+}
+
+.upgrades ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.upgrades li {
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.upgrades img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 8px;
+}
+
+.reviews ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.reviews li {
+  margin-bottom: 8px;
+}
+
 /* Vehicle  - detail view */
 #detail {
   display: flex;
@@ -187,6 +239,210 @@ a:hover {
   background-color: #fff2f2;
   color: #8a1f1f;
   border-radius: 8px;
+}
+
+/* Messages - Flash output */
+.message.success {
+  max-width: 720px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  border: 1px solid #b7e0b4;
+  background-color: #f2fff2;
+  color: #2f6f2f;
+  border-radius: 8px;
+}
+
+.message.notice {
+  max-width: 720px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  border: 1px solid #c9d4e6;
+  background-color: #f3f7ff;
+  color: #2a4a7a;
+  border-radius: 8px;
+}
+
+/* Account - Login page */
+#loginContainer {
+  max-width: 520px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+#loginContainer fieldset {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+#loginContainer label {
+  font-weight: 600;
+}
+
+#loginContainer input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  font: inherit;
+  background-color: #fff;
+}
+
+#loginContainer button {
+  margin-top: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#loginContainer button:hover {
+  background-color: #222;
+}
+
+#loginContainer p {
+  margin: 12px 0 0;
+  text-align: center;
+}
+
+#pswdBtn {
+  color: #1a4d8f;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+
+/* Account - Management page */
+main h2,
+main h3 {
+  margin-top: 16px;
+}
+
+main a[title*="update"],
+main a[href="/inv/"] {
+  display: inline-block;
+  margin: 6px 0 12px;
+  padding: 8px 12px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 6px;
+}
+
+/* Account - Update page */
+main form[action="/account/update/"],
+main form[action="/account/password"] {
+  max-width: 640px;
+  margin: 0 auto 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  display: grid;
+  gap: 10px;
+}
+
+main form[action="/account/update/"] input,
+main form[action="/account/password"] input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  font: inherit;
+  background-color: #fff;
+}
+
+main form[action="/account/update/"] input[type="submit"],
+main form[action="/account/password"] input[type="submit"] {
+  border: none;
+  background-color: #333;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Inventory - Classification list */
+#inv-display {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#inv-display li {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+#inv-display img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Inventory - Management page */
+.boldList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.boldList a {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 6px;
+}
+
+#inventoryDisplay {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+#inventoryDisplay th,
+#inventoryDisplay td {
+  border: 1px solid #e0e0e0;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+#inventoryDisplay tr:nth-child(even) {
+  background-color: #f7f7f7;
+}
+
+/* Errors - Error page */
+#error-page {
+  text-align: center;
+  padding: 20px;
+}
+
+#error-heading {
+  margin-bottom: 12px;
+}
+
+#error-container {
+  margin: 0 auto;
+}
+
+#error-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
 }
 
 #vehicle-display img {

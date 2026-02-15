@@ -105,11 +105,11 @@ async function accountLogin(req, res) {
   try {
     if (await bcrypt.compare(account_password, accountData.account_password)) {
       delete accountData.account_password
-      // const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
-      // res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-      // return res.redirect("/")
-      // req.flash("message success", `Welcome back, ${accountData.account_firstname}.`)
-      return res.status(200).redirect("/account/login")
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+      req.flash("message success", `Welcome back, ${accountData.account_firstname}.`)
+      return res.redirect("/")
+      // return res.status(200).redirect("/account/login")
     }
     else {
       req.flash("message notice", "Please check your credentials and try again.")

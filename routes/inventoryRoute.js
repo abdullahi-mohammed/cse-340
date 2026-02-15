@@ -15,7 +15,7 @@ router.get("/broken", utilities.handleErrors(invController.throwError))
 
 //Build Management View Route
 router.get("/",
-    // utilities.checkAccountType, 
+    utilities.checkAccountType,
     utilities.handleErrors(invController.buildManagementView))
 
 /* ****************************************
@@ -25,7 +25,7 @@ router.get("/",
  **************************************** */
 router.get(
     "/newClassification",
-    // utilities.checkAccountType,
+    utilities.checkAccountType,
     utilities.handleErrors(invController.newClassificationView)
 )
 
@@ -37,7 +37,7 @@ router.get(
  **************************************** */
 router.post(
     "/addClassification",
-    // utilities.checkAccountType,
+    utilities.checkAccountType,
     invChecks.classificationRule(),
     invChecks.checkClassificationData,
     utilities.handleErrors(invController.addClassification)
@@ -50,7 +50,7 @@ router.post(
   **************************************** */
 router.get(
     "/newVehicle",
-    // utilities.checkAccountType,
+    utilities.checkAccountType,
     utilities.handleErrors(invController.newInventoryView)
 )
 
@@ -61,7 +61,7 @@ router.get(
  **************************************** */
 router.post(
     "/addInventory",
-    // utilities.checkAccountType,
+    utilities.checkAccountType,
     invChecks.newInventoryRules(),
     invChecks.checkInventoryData,
     utilities.handleErrors(invController.addInventory)
@@ -73,7 +73,7 @@ router.post(
  **************************************** */
 router.get(
     "/getInventory/:classification_id",
-    // utilities.checkAccountType,
+    utilities.checkAccountType,
     utilities.handleErrors(invController.getInventoryJSON)
 )
 

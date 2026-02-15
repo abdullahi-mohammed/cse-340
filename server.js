@@ -33,6 +33,10 @@ app.use(session({
   saveUninitialized: true,
 }))
 
+
+// JWT middleware
+app.use(utilites.checkJWTToken);
+
 // Flash messages
 app.use(flash())
 
