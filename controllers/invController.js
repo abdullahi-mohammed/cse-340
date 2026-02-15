@@ -150,7 +150,7 @@ invCont.addInventory = async function (req, res, next) {
     if (insertResult) {
         console.log(insertResult, 'insert vehicle result');
 
-        const itemName = insertResult[0].inv_make + " " + insertResult[0].inv_model
+        const itemName = insertResult.rows[0].inv_make + " " + insertResult.rows[0].inv_model
         const classificationSelect = await utilities.buildClassificationList()
         req.flash("message success", `The ${itemName} was successfully added.`)
         res.status(201).render("./inventory/management", {
@@ -195,7 +195,7 @@ invCont.editInvItemView = async function (req, res, next) {
     const invData = await invModel.getInventoryById(inv_id)
     const classificationSelect = await utilities.buildClassificationList(invData.classification_id)
     const itemName = `${invData.inv_make} ${invData.inv_model}`
-    res.render("./inventory/edit-inventory", {
+    res.render("inventory/edit-inventory", {
         title: "Edit " + itemName,
         nav,
         classificationSelect: classificationSelect,
@@ -234,8 +234,9 @@ invCont.updateInventory = async function (req, res, next) {
         classification_id
     } = req.body
 
-    const updateResult = await invModel.updateInventory(
+    const updateResult = await invModel.editInventory(
         inv_id,
+        classification_id,
         inv_make,
         inv_model,
         inv_description,
@@ -245,7 +246,6 @@ invCont.updateInventory = async function (req, res, next) {
         inv_year,
         inv_miles,
         inv_color,
-        classification_id
     )
 
     if (updateResult) {
@@ -306,7 +306,7 @@ invCont.deleteItem = async function (req, res, next) {
     let nav = await utilities.getNav()
     const inv_id = parseInt(req.body.inv_id)
 
-    const deleteResult = await invModel.deleteInventoryItem(inv_id)
+    const deleteResult = await invModel.deleteInventory(inv_id)
 
     if (deleteResult) {
         req.flash("message success", 'The deletion was successful.')
