@@ -29,7 +29,7 @@ CONSTRAINT inventory_pkey PRIMARY KEY (inv_id)
 );
 
 -- Create relation between `classification` and `inventory` tables
-ALTER TABLE IF EXISTS public.inentory
+ALTER TABLE IF EXISTS public.inventory
 ADD CONSTRAINT fk_classification FOREIGN KEY (classification_id)
 REFERENCES public.classification (classification_id) MATCH SIMPLE
 ON UPDATE CASCADE
