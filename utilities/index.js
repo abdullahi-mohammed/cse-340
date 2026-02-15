@@ -103,6 +103,76 @@ Util.buildErrorMessage = async function (error) {
 
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+/* ***************************
+ * Build review list HTML for a vehicle detail page
+ * ************************** */
+Util.buildReviewList = function (reviews) {
+    let html = ""
+    if (reviews.length > 0) {
+        html += '<ul class="review-list">'
+        reviews.forEach((review) => {
+            let stars = ""
+            for (let i = 1; i <= 5; i++) {
+                stars += `<span class="star ${i <= review.review_rating ? "filled" : ""}">&#9733;</span>`
+            }
+            const reviewDate = new Date(review.review_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            })
+            const screenName = review.account_firstname.charAt(0) + review.account_lastname
+            html += "<li class='review-item'>"
+            html += `<div class="review-header">`
+            html += `<strong class="review-author">${screenName}</strong>`
+            html += `<span class="review-stars">${stars}</span>`
+            html += `<span class="review-date">${reviewDate}</span>`
+            html += `</div>`
+            html += `<p class="review-text">${review.review_text}</p>`
+            html += "</li>"
+        })
+        html += "</ul>"
+    } else {
+        html += '<p class="notice">No reviews yet. Be the first to review this vehicle!</p>'
+    }
+    return html
+}
+
+/* ***************************
+ * Build user's review list HTML for account management
+ * ************************** */
+Util.buildAccountReviewList = function (reviews) {
+    let html = ""
+    if (reviews.length > 0) {
+        html += '<table class="account-reviews-table">'
+        html += "<thead><tr><th>Vehicle</th><th>Rating</th><th>Date</th><th>Actions</th></tr></thead>"
+        html += "<tbody>"
+        reviews.forEach((review) => {
+            let stars = ""
+            for (let i = 1; i <= 5; i++) {
+                stars += `<span class="star ${i <= review.review_rating ? "filled" : ""}">&#9733;</span>`
+            }
+            const reviewDate = new Date(review.review_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            })
+            html += "<tr>"
+            html += `<td>${review.inv_year} ${review.inv_make} ${review.inv_model}</td>`
+            html += `<td>${stars}</td>`
+            html += `<td>${reviewDate}</td>`
+            html += `<td class="review-actions">`
+            html += `<a href="/review/edit/${review.review_id}" class="btn-edit" title="Edit review">Edit</a> | `
+            html += `<a href="/review/delete/${review.review_id}" class="btn-delete" title="Delete review">Delete</a>`
+            html += `</td>`
+            html += "</tr>"
+        })
+        html += "</tbody></table>"
+    } else {
+        html += "<p>You haven't written any reviews yet.</p>"
+    }
+    return html
+}
+
 
 
 /* ****************************************

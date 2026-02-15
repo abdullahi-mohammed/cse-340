@@ -58,6 +58,7 @@ app.get("/", utilites.handleErrors(baseController.buildHome))
 //Inventory Routes
 app.use("/inv", require("./routes/inventoryRoute"))
 app.use("/account", require("./routes/accountRoute"))
+app.use("/review", require("./routes/reviewRoute"))
 
 app.use(async (req, res, next) => {
   next({ status: 404, message: `Sorry, we appear to have lost that page.` })

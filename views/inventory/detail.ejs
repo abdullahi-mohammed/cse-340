@@ -1,16 +1,44 @@
 <%# Unit 3, Assignment 3, Task 1 %>
-<% if (title) { %>
-<h1><%= title %></h1>
-<% } else {
-  res.redirect('/')
-} %>
+  <% if (title) { %>
+    <h1>
+      <%= title %>
+    </h1>
+    <% } else { res.redirect('/') } %>
+
+      <%- messages() %>
+
+        <% if(Object.entries(htmlData).length> 0){ %>
 
 
+          <%- htmlData %>
+            <% } else { %>
+              <p class="notice">Sorry, no matching vehicle could be found.</p>
+              <% } %>
 
-<% if(Object.entries(htmlData).length > 0){ %>
+                <%# Vehicle Reviews Section %>
+                  <section class="review-section">
+                    <h2>Customer Reviews</h2>
 
-<%- htmlData %>
-<% } else { %>
-<p class="notice">Sorry, no matching vehicle could be found.</p>
-<% } %>
+                    <% if (avgRating) { %>
+                      <div class="review-summary">
+                        <span class="avg-rating">
+                          <%= avgRating %>
+                        </span>
+                        <span class="stars-display">
+                          <% for (let i=1; i <=5; i++) { %>
+                            <span
+                              class="star <%= i <= Math.round(parseFloat(avgRating)) ? 'filled' : '' %>">&#9733;</span>
+                            <% } %>
+                        </span>
+                        <span>(<%= reviewCount %> review<%= reviewCount> 1 ? 's' : '' %>)</span>
+                      </div>
+                      <% } %>
 
+                        <%- reviewsHTML %>
+
+                          <% if (locals.loggedin) { %>
+                            <a href="/review/add/<%= inv_id %>" class="add-review-link">Write a Review</a>
+                            <% } else { %>
+                              <p><a href="/account/login">Log in</a> to write a review.</p>
+                              <% } %>
+                  </section>

@@ -1,0 +1,35 @@
+<%# Delete Review Confirmation View %>
+    <h1>
+        <%= title %>
+    </h1>
+
+    <%- messages() %>
+
+        <div class="review-delete-confirm">
+            <p><strong>Are you sure you want to delete this review?</strong></p>
+            <p>This action cannot be undone.</p>
+
+            <div class="review-preview">
+                <p><strong>Vehicle:</strong>
+                    <%= inv_year %>
+                        <%= inv_make %>
+                            <%= inv_model %>
+                </p>
+                <p><strong>Rating:</strong>
+                    <span class="stars-display">
+                        <% for (let i=1; i <=5; i++) { %>
+                            <span class="star <%= i <= review_rating ? 'filled' : '' %>">&#9733;</span>
+                            <% } %>
+                    </span>
+                </p>
+                <p><strong>Review:</strong>
+                    <%= review_text %>
+                </p>
+            </div>
+
+            <form id="deleteReviewForm" action="/review/delete" method="post">
+                <input type="hidden" name="review_id" value="<%= review_id %>">
+                <button type="submit" class="btn-danger">Confirm Delete</button>
+                <a href="/account/" class="btn-secondary">Cancel</a>
+            </form>
+        </div>

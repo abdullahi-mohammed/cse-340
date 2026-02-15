@@ -1,0 +1,47 @@
+<%# Add Review View %>
+    <h1>
+        <%= title %>
+    </h1>
+
+    <%- messages() %>
+
+        <% if (errors) { %>
+            <ul class="message warning">
+                <% errors.array().forEach(error=> { %>
+                    <li>
+                        <%= error.msg %>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } %>
+
+                <p>Share your experience with the <strong>
+                        <%= inv_year %>
+                            <%= inv_make %>
+                                <%= inv_model %>
+                    </strong></p>
+
+                <form id="reviewForm" action="/review/add" method="post">
+                    <fieldset>
+                        <legend>Your Review</legend>
+
+                        <label for="review_rating">Rating:</label>
+                        <div class="star-rating-input">
+                            <% for (let i=5; i>= 1; i--) { %>
+                                <input type="radio" id="star<%= i %>" name="review_rating" value="<%= i %>"
+                                    <%=review_rating==i ? 'checked' : '' %> required>
+                                <label for="star<%= i %>" title="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+                                <% } %>
+                        </div>
+
+                        <label for="review_text">Your Review:</label>
+                        <textarea id="review_text" name="review_text" rows="6" required minlength="10"
+                            placeholder="Write your review here (minimum 10 characters)..."><%= review_text %></textarea>
+
+                        <input type="hidden" name="inv_id" value="<%= inv_id %>">
+
+                        <button type="submit" class="btn-primary">Submit Review</button>
+                    </fieldset>
+                </form>
+
+                <p><a href="/inv/detail/<%= inv_id %>">&larr; Back to vehicle details</a></p>
